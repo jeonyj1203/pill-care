@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2F6FE0">
+<title>PILL CARE · 보조제 복용 기록</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F7FC; --panel:#FFFFFF; --ink:#161E2E; --muted:#65718A;
+  --border:#DCE4F2; --primary:#2F6FE0; --primary-2:#8FC6FF; --primary-ink:#FFFFFF;
+  --accent:#2F6FE0; --danger:#C1493B; --radius:18px;
+  --grad: linear-gradient(135deg, var(--primary-2), var(--primary) 75%);
+  --font:'IBM Plex Sans KR',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --font-display:'Space Grotesk','IBM Plex Sans KR',sans-serif;
+  color-scheme: light;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1420; --panel:#161E2E; --ink:#EAF0FC; --muted:#8C99B8;
+    --border:#2A3550; --primary:#8FC6FF; --primary-2:#2F6FE0; --primary-ink:#0E1420;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1420; --panel:#161E2E; --ink:#EAF0FC; --muted:#8C99B8;
+  --border:#2A3550; --primary:#8FC6FF; --primary-2:#2F6FE0; --primary-ink:#0E1420;
+  color-scheme: dark;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.65;letter-spacing:-.01em}
+button{font:inherit;cursor:pointer}
+h1,h2,h3{margin:0}
+main{max-width:960px;margin:0 auto;padding:0 20px 60px}
+.site-header{max-width:960px;margin:0 auto;padding:22px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.brand{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:20px;font-weight:600;letter-spacing:.22em}
+.brand-icon{font-size:20px;width:38px;height:38px;border-radius:11px;background:var(--grad);display:grid;place-items:center;letter-spacing:0}
+.main-nav{display:flex;gap:4px;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:4px}
+.nav-link{border:0;background:transparent;color:var(--muted);font-family:var(--font-display);font-size:13px;font-weight:500;letter-spacing:.02em;padding:9px 15px;border-radius:8px}
+.nav-link.active{background:var(--grad);color:var(--primary-ink)}
+.tagline{color:var(--muted);font-size:14px;margin:0 0 20px;text-align:center}
+.chat-panel{display:flex;flex-direction:column;gap:12px;background:var(--bg)}
+.chat-log .chat-bubble{background:#fff}
+.chat-log{display:flex;flex-direction:column;gap:10px;min-height:220px;max-height:400px;overflow-y:auto;padding:4px}
+.chat-msg{display:flex}
+.chat-msg.user{justify-content:flex-end}
+.chat-bubble{max-width:80%;padding:10px 13px;border-radius:12px;font-size:14px;line-height:1.6;background:var(--bg);border:1px solid var(--border)}
+.chat-msg.user .chat-bubble{background:var(--grad);color:#fff;border-color:transparent}
+.chat-chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--border);background:var(--bg);color:var(--ink);border-radius:20px;padding:6px 12px;font-size:12px}
+.chat-form{display:flex;gap:10px;align-items:center;background:var(--grad);border-radius:26px;padding:8px 8px 8px 18px}
+.chat-form input{flex:1;border:0;border-radius:20px;padding:11px 16px;font:inherit;background:#fff;color:var(--ink)}
+.chat-form button{width:42px;height:42px;padding:0;border-radius:50%;background:#fff;color:var(--primary);flex-shrink:0}
+.chat-note{font-size:11px;color:var(--muted);margin:0}
+.tip-grid{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-areas:"a b d" "c e d";gap:14px}
+.tip-grid .tip-a{grid-area:a}.tip-grid .tip-b{grid-area:b}.tip-grid .tip-c{grid-area:c}.tip-grid .tip-e{grid-area:e}.tip-grid .tip-d{grid-area:d}
+@media(max-width:760px){.tip-grid{grid-template-columns:1fr 1fr;grid-template-areas:"a b" "c b" "d d" "e e"}}
+@media(max-width:520px){.tip-grid{grid-template-columns:1fr;grid-template-areas:"a" "b" "c" "d" "e"}}
+.tip-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column}
+.tip-card.tip-d{background:var(--grad);color:#fff;border:0;justify-content:center}
+.tip-card.tip-d .tip-icon{font-size:34px}
+.tip-card.tip-d p{color:#eaf1ff}
+.tip-card .tip-icon{font-size:24px}
+.tip-card h3{font-size:15px;margin:12px 0 6px}
+.tip-card p{font-size:13px;color:var(--muted);margin:0;line-height:1.7}
+.workspace{display:grid;grid-template-columns:1.05fr 1fr;gap:18px;margin-top:26px}
+@media(max-width:760px){.workspace{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.panel h2{font-size:16px;display:flex;align-items:center;gap:9px;margin-bottom:14px}
+.step{font-size:11px;font-weight:700;color:var(--primary);border:1px solid var(--border);border-radius:50%;width:22px;height:22px;display:grid;place-items:center;flex-shrink:0}
+.source-switch{display:flex;gap:4px;background:var(--bg);border-radius:10px;padding:4px;margin-bottom:14px}
+.source-switch button{flex:1;border:0;background:transparent;color:var(--muted);border-radius:7px;padding:9px;font-size:13px;font-weight:600}
+.source-switch button.active{background:var(--panel);color:var(--primary);box-shadow:0 1px 3px #0001}
+.stage{background:var(--grad);color:var(--primary-ink);border-radius:14px;height:280px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.stage img,.stage video{width:100%;height:100%;object-fit:cover}
+.empty-input{text-align:center;padding:20px}
+.empty-input p{margin:0 0 14px;font-size:14px;opacity:.85}
+.button{border:0;border-radius:9px;font-weight:600;font-size:14px;min-height:44px;padding:10px 18px;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.button.accent{background:var(--grad);color:#fff}
+.button.primary{background:var(--panel);border:1px solid var(--border);color:var(--primary)}
+.button.primary:disabled{opacity:.5;cursor:not-allowed}
+.button.secondary{background:transparent;border:1px solid var(--border);color:var(--ink)}
+.input-actions{display:flex;gap:8px;margin-top:14px}
+.input-actions .button{flex:1}
+.model-state{font-size:12px;color:var(--muted);margin-top:10px;text-align:center}
+input[type=file]{display:none}
+.empty-result{text-align:center;padding:44px 10px;color:var(--muted);font-size:14px}
+.top-result{display:flex;align-items:center;gap:12px}
+.top-icon{font-size:34px}
+.top-label{font-size:20px;font-weight:700}
+.top-score{color:var(--primary);font-weight:600;font-size:14px;margin-top:2px}
+.bars{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.bar-row{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.bar-name{width:88px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-track{flex:1;height:6px;border-radius:6px;background:var(--bg);overflow:hidden}
+.bar-fill{height:100%;background:var(--primary);border-radius:6px}
+.bar-pct{width:38px;text-align:right;flex-shrink:0}
+.save-area{margin-top:18px}
+.low-note{margin-top:14px;font-size:13px;color:var(--danger)}
+.log-panel{margin-top:18px}
+.log-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.log-heading h2{font-size:16px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:9px 6px;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-weight:600;font-size:12px}
+td.del{text-align:right}
+.del-btn{background:none;border:0;color:var(--muted);font-size:13px}
+.log-empty{color:var(--muted);font-size:14px;padding:8px 0}
+footer{max-width:960px;margin:0 auto;padding:20px;color:var(--muted);font-size:12px;text-align:center}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="brand"><span class="brand-icon">💊</span><span>PILL CARE</span></div>
+  <nav class="main-nav" aria-label="메인 메뉴">
+    <button class="nav-link active" data-view="check" type="button">pill check</button>
+    <button class="nav-link" data-view="chat" type="button">AI chatting</button>
+    <button class="nav-link" data-view="tip" type="button">tip</button>
+  </nav>
+</header>
+
+<main>
+<div id="view-check" class="app-view">
+  <p class="tagline">사진 한 장으로 오늘 챙긴 보조제를 인식하고 기록하세요</p>
+  <section class="workspace">
+    <div class="panel">
+      <h2><span class="step">1</span>보조제 사진 찍기</h2>
+      <div class="source-switch" role="group" aria-label="입력 방법">
+        <button id="photoModeBtn" class="active" type="button">사진 선택</button>
+        <button id="cameraModeBtn" type="button">카메라</button>
+      </div>
+      <div class="stage" id="stage">
+        <img id="photo" alt="분석할 보조제 사진" hidden>
+        <video id="video" autoplay playsinline muted hidden></video>
+        <div id="emptyInput" class="empty-input">
+          <p>보조제 하나가 잘 보이도록 사진을 준비해 주세요</p>
+          <button id="chooseStart" class="button accent" type="button">사진 선택하기 ＋</button>
+        </div>
+      </div>
+      <input id="fileInput" type="file" accept="image/*">
+      <div class="input-actions">
+        <button id="replaceBtn" class="button secondary" type="button" disabled>다른 사진</button>
+        <button id="analyzeBtn" class="button primary" type="button" disabled>보조제 확인하기</button>
+      </div>
+      <p id="modelState" class="model-state">모델 연결 중…</p>
+    </div>
+
+    <div class="panel">
+      <h2><span class="step">2</span>인식 결과</h2>
+      <div id="emptyResult" class="empty-result">사진을 올리고 ‘보조제 확인하기’를 눌러 주세요.</div>
+      <div id="resultContent" hidden>
+        <div class="top-result">
+          <span id="topIcon" class="top-icon"></span>
+          <div><div id="topLabel" class="top-label"></div><div id="topScore" class="top-score"></div></div>
+        </div>
+        <div id="bars" class="bars"></div>
+        <div id="saveArea" class="save-area" hidden>
+          <button id="saveBtn" class="button accent" type="button" style="width:100%">오늘 기록에 저장</button>
+        </div>
+        <p id="lowNote" class="low-note" hidden>확신도가 낮아요. 더 가까이서, 밝은 곳에서 다시 찍어 주세요.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel log-panel">
+    <div class="log-heading">
+      <h2>오늘의 복용 기록</h2>
+      <button id="clearAllBtn" class="button secondary" type="button">전체 삭제</button>
+    </div>
+    <p id="logEmpty" class="log-empty">아직 저장된 기록이 없어요.</p>
+    <table id="logTable" hidden>
+      <thead><tr><th>날짜</th><th>시간</th><th>보조제</th><th></th></tr></thead>
+      <tbody id="logBody"></tbody>
+    </table>
+  </section>
+</div>
+
+<div id="view-chat" class="app-view" hidden>
+  <p class="tagline">보조제 복용에 대해 자주 묻는 질문에 답해드려요</p>
+  <div class="panel chat-panel">
+    <div id="chatLog" class="chat-log">
+      <div class="chat-msg bot"><span class="chat-bubble">안녕하세요! 보조제 복용 습관에 대해 궁금한 걸 물어보세요. 예를 들어 "깜빡했어요"처럼 편하게 적어주시면 돼요.</span></div>
+    </div>
+    <div class="chat-chips">
+      <button class="chip" type="button">깜빡하고 안 먹었어요</button>
+      <button class="chip" type="button">오메가3 언제 먹어요?</button>
+      <button class="chip" type="button">기록은 어디서 봐요?</button>
+    </div>
+    <form id="chatForm" class="chat-form">
+      <input id="chatInput" type="text" placeholder="메시지를 입력하세요" autocomplete="off">
+      <button class="button accent" type="submit" aria-label="전송">➤</button>
+    </form>
+    <p class="chat-note">※ 이 챗봇은 미리 정해둔 답변으로만 응답하는 간단한 규칙 기반 도우미이며, 실제 의료 조언이 아니에요.</p>
+  </div>
+</div>
+
+<div id="view-tip" class="app-view" hidden>
+  <p class="tagline">보조제 복용 습관을 위한 짧은 팁 모음</p>
+  <div class="tip-grid" id="tipGrid"></div>
+</div>
+</main>
+
+<footer>이 페이지의 사진은 서버로 전송되지 않고 브라우저 안에서만 분석됩니다. 기록은 이 브라우저에만 저장됩니다.</footer>
+
+<script>
+(function(){
+  // ▼▼▼ 티처블머신 Export 화면에서 받은 모델 URL을 여기에 붙여넣으세요 (마지막 슬래시까지 포함) ▼▼▼
+  const MODEL_URL = "https://teachablemachine.withgoogle.com/models/HF2bnGuQw/";
+  // ▲▲▲ 예: "https://teachablemachine.withgoogle.com/models/AbCdEfGh/" ▲▲▲
+
+  const CLASS_INFO = {
+    "모닝 보조제": {icon:"🌅"},
+    "이브닝 보조제": {icon:"🌙"},
+    "오메가3": {icon:"🐟"},
+    "마그네슘": {icon:"✨"}
+  };
+  const getIcon = label => (CLASS_INFO[label] && CLASS_INFO[label].icon) || "💊";
+  const THRESHOLD = 0.6;
+  const LOG_KEY = "dailypillbox_log";
+
+  const $ = id => document.getElementById(id);
+  const ui = Object.fromEntries(["photoModeBtn","cameraModeBtn","stage","photo","video","emptyInput",
+    "chooseStart","fileInput","replaceBtn","analyzeBtn","modelState","emptyResult","resultContent",
+    "topIcon","topLabel","topScore","bars","saveArea","saveBtn","lowNote","logEmpty","logTable","logBody","clearAllBtn"
+  ].map(id=>[id,$(id)]));
+
+  const state = { mode:"photo", model:null, stream:null, imageReady:false, busy:false, lastPrediction:null };
+  const scripts = new Map();
+
+  function loadScript(src, expected){
+    if(window[expected]) return Promise.resolve();
+    if(scripts.has(src)) return scripts.get(src);
+    const task = new Promise((resolve,reject)=>{
+      const s=document.createElement("script"); s.src=src; s.async=true; s.crossOrigin="anonymous";
+      s.onload=()=>window[expected]?resolve():reject(new Error("LIBRARY_MISSING"));
+      s.onerror=()=>reject(new Error("LIBRARY_NETWORK"));
+      document.head.appendChild(s);
+    });
+    scripts.set(src, task); return task;
+  }
+
+  async function connectModel(){
+    if(MODEL_URL.includes("여기에_본인_모델_URL")){
+      ui.modelState.textContent="⚠️ 아직 모델 URL이 설정되지 않았어요. 코드 상단의 MODEL_URL을 채워주세요.";
+      return;
+    }
+    ui.modelState.textContent="모델 연결 중…";
+    try{
+      await loadScript("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.11.0/dist/tf.min.js","tf");
+      await loadScript("https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.5/dist/teachablemachine-image.min.js","tmImage");
+      state.model = await window.tmImage.load(MODEL_URL+"model.json", MODEL_URL+"metadata.json");
+      ui.modelState.textContent="모델 연결 완료 ✅";
+    }catch(e){
+      ui.modelState.textContent="모델 연결 실패. 인터넷 연결과 모델 URL을 확인해 주세요.";
+    }
+    syncControls();
+  }
+
+  function syncControls(){
+    const hasInput = state.mode==="photo" ? state.imageReady : !!state.stream;
+    ui.analyzeBtn.disabled = !hasInput || !state.model || state.busy;
+    ui.replaceBtn.disabled = state.busy || !hasInput;
+  }
+
+  function switchMode(mode){
+    if(state.mode===mode || state.busy) return;
+    state.mode=mode;
+    ui.photoModeBtn.classList.toggle("active", mode==="photo");
+    ui.cameraModeBtn.classList.toggle("active", mode==="camera");
+    resetStage();
+    if(mode==="camera") startCamera(); else stopCamera();
+  }
+
+  function resetStage(){
+    state.imageReady=false;
+    ui.photo.hidden=true; ui.photo.removeAttribute("src");
+    ui.video.hidden = true;
+    ui.emptyInput.hidden = false;
+    clearResult();
+    syncControls();
+  }
+
+  async function startCamera(){
+    try{
+      state.stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}});
+      ui.video.srcObject = state.stream;
+      ui.video.hidden=false; ui.emptyInput.hidden=true;
+    }catch(e){
+      ui.modelState.textContent="카메라 권한을 허용해 주세요.";
+      switchMode("photo");
+    }
+    syncControls();
+  }
+  function stopCamera(){
+    if(state.stream) state.stream.getTracks().forEach(t=>t.stop());
+    state.stream=null; ui.video.hidden=true; ui.video.srcObject=null;
+    ui.emptyInput.hidden = !ui.photo.hidden;
+  }
+
+  ui.photoModeBtn.addEventListener("click", ()=>switchMode("photo"));
+  ui.cameraModeBtn.addEventListener("click", ()=>switchMode("camera"));
+  ui.chooseStart.addEventListener("click", ()=>{
+    if(state.mode==="camera") startCamera(); else ui.fileInput.click();
+  });
+  ui.replaceBtn.addEventListener("click", ()=>{
+    if(state.mode==="photo"){ resetStage(); } else { stopCamera(); startCamera(); }
+  });
+  ui.fileInput.addEventListener("change", e=>{
+    const file=e.target.files[0]; if(!file) return;
+    ui.photo.src = URL.createObjectURL(file);
+    ui.photo.hidden=false; ui.emptyInput.hidden=true; state.imageReady=true;
+    clearResult(); syncControls();
+  });
+
+  function clearResult(){
+    state.lastPrediction=null;
+    ui.emptyResult.hidden=false; ui.resultContent.hidden=true;
+    ui.saveArea.hidden=true; ui.lowNote.hidden=true;
+  }
+
+  ui.analyzeBtn.addEventListener("click", async ()=>{
+    if(!state.model || state.busy) return;
+    state.busy=true; syncControls();
+    ui.analyzeBtn.textContent="확인하는 중…";
+    try{
+      const source = state.mode==="photo" ? ui.photo : ui.video;
+      const predictions = await state.model.predict(source);
+      predictions.sort((a,b)=>b.probability-a.probability);
+      renderPredictions(predictions);
+    }catch(e){
+      ui.modelState.textContent="분석 중 오류가 발생했어요. 다시 시도해 주세요.";
+    }
+    state.busy=false; ui.analyzeBtn.textContent="보조제 확인하기"; syncControls();
+  });
+
+  function renderPredictions(predictions){
+    const top = predictions[0];
+    state.lastPrediction = top;
+    ui.emptyResult.hidden=true; ui.resultContent.hidden=false;
+    ui.topIcon.textContent = getIcon(top.className);
+    ui.topLabel.textContent = top.className;
+    ui.topScore.textContent = Math.round(top.probability*100)+"% 확신";
+    ui.bars.innerHTML="";
+    predictions.forEach(p=>{
+      const row=document.createElement("div"); row.className="bar-row";
+      row.innerHTML = `<span class="bar-name">${p.className}</span><span class="bar-track"><span class="bar-fill" style="width:${Math.round(p.probability*100)}%"></span></span><span class="bar-pct">${Math.round(p.probability*100)}%</span>`;
+      ui.bars.appendChild(row);
+    });
+    const confident = top.probability >= THRESHOLD;
+    ui.saveArea.hidden = !confident;
+    ui.lowNote.hidden = confident;
+  }
+
+  ui.saveBtn.addEventListener("click", ()=>{
+    if(!state.lastPrediction) return;
+    const now=new Date();
+    const record={
+      label: state.lastPrediction.className,
+      date: now.toLocaleDateString("ko-KR",{year:"numeric",month:"2-digit",day:"2-digit"}),
+      time: now.toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"}),
+      ts: now.getTime()
+    };
+    const log = readLog(); log.unshift(record); writeLog(log); renderLog();
+    ui.saveBtn.textContent="저장됨 ✓";
+    setTimeout(()=>{ui.saveBtn.textContent="오늘 기록에 저장";},1200);
+  });
+
+  function readLog(){
+    try{ return JSON.parse(localStorage.getItem(LOG_KEY)||"[]"); }catch(e){ return []; }
+  }
+  function writeLog(log){
+    try{ localStorage.setItem(LOG_KEY, JSON.stringify(log)); }catch(e){}
+  }
+  function renderLog(){
+    const log = readLog();
+    ui.logEmpty.hidden = log.length>0;
+    ui.logTable.hidden = log.length===0;
+    ui.logBody.innerHTML="";
+    log.forEach((r,i)=>{
+      const tr=document.createElement("tr");
+      tr.innerHTML = `<td>${r.date}</td><td>${r.time}</td><td>${getIcon(r.label)} ${r.label}</td><td class="del"><button class="del-btn" data-i="${i}">삭제</button></td>`;
+      ui.logBody.appendChild(tr);
+    });
+    ui.logBody.querySelectorAll(".del-btn").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const log=readLog(); log.splice(Number(btn.dataset.i),1); writeLog(log); renderLog();
+      });
+    });
+  }
+  ui.clearAllBtn.addEventListener("click", ()=>{
+    if(confirm("모든 복용 기록을 삭제할까요?")){ writeLog([]); renderLog(); }
+  });
+
+  renderLog();
+  connectModel();
+
+  // ---- 탭 전환 ----
+  const views = {check:$("view-check"), chat:$("view-chat"), tip:$("view-tip")};
+  document.querySelectorAll(".nav-link").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      document.querySelectorAll(".nav-link").forEach(b=>b.classList.toggle("active", b===btn));
+      Object.entries(views).forEach(([key,el])=>{ el.hidden = key!==btn.dataset.view; });
+    });
+  });
+
+  // ---- 규칙 기반 챗봇 ----
+  const CHAT_RULES = [
+    {keywords:["깜빡","놓쳤","못 먹","안 먹었"], reply:"깜빡했다면 다음 복용 시간까지 많이 남지 않은 경우 이번 회차는 건너뛰고 평소 시간에 맞춰 다시 복용하는 걸 권장해요. 정확한 판단은 제품 설명서나 약사·의사 상담을 참고해 주세요."},
+    {keywords:["오메가3","오메가"], reply:"오메가3는 보통 지용성이라 식사 직후에 먹으면 흡수가 더 잘 되는 편이에요. 위가 불편하다면 식사 중간에 드셔보세요."},
+    {keywords:["마그네슘"], reply:"마그네슘은 취침 전에 먹으면 근육 이완에 도움이 된다고 알려져 있어요. 다른 미네랄과 함께 먹을 땐 흡수 간섭이 있을 수 있으니 시간차를 두는 것도 방법이에요."},
+    {keywords:["시간","언제"], reply:"보조제마다 권장 시간이 달라요. 아침/저녁으로 나뉜 보조제는 제품 라벨의 권장 시간을 따르고, 매일 같은 시간에 맞춰두면 습관 들이기 좋아요."},
+    {keywords:["기록","저장","확인"], reply:"복용 기록은 상단의 'pill check' 탭에서 사진으로 인식한 뒤 저장할 수 있어요. 저장된 기록은 그 탭 하단 표에서 확인 가능해요."},
+    {keywords:["안녕","반가"], reply:"안녕하세요! 보조제 복용과 관련해 궁금한 점을 편하게 물어보세요."}
+  ];
+  function chatReply(text){
+    const found = CHAT_RULES.find(r=>r.keywords.some(k=>text.includes(k)));
+    return found ? found.reply : "아직 답변을 준비하지 못한 질문이에요. 아래 추천 질문을 눌러보시거나 다른 표현으로 물어봐 주세요.";
+  }
+  function addChatMsg(text, who){
+    const div=document.createElement("div"); div.className="chat-msg "+who;
+    div.innerHTML=`<span class="chat-bubble"></span>`; div.querySelector(".chat-bubble").textContent=text;
+    ui.chatLog = ui.chatLog || $("chatLog");
+    ui.chatLog.appendChild(div); ui.chatLog.scrollTop = ui.chatLog.scrollHeight;
+  }
+  function sendChat(text){
+    text=text.trim(); if(!text) return;
+    addChatMsg(text,"user");
+    setTimeout(()=>addChatMsg(chatReply(text),"bot"), 250);
+  }
+  $("chatForm").addEventListener("submit", e=>{
+    e.preventDefault();
+    const input=$("chatInput"); sendChat(input.value); input.value="";
+  });
+  document.querySelectorAll(".chip").forEach(chip=>{
+    chip.addEventListener("click", ()=>sendChat(chip.textContent));
+  });
+
+  // ---- 팁 페이지 (비대칭 그리드: a,c 왼쪽 / b,e 가운데 / d 오른쪽 전체 높이) ----
+  const TIPS = [
+    {area:"a", icon:"⏰", title:"복용 시간을 고정하세요", body:"매일 같은 시간에 알림을 맞추면 자연스럽게 습관이 됩니다."},
+    {area:"b", icon:"💧", title:"물과 함께 삼키세요", body:"미지근한 물과 함께 먹으면 흡수에 도움이 돼요."},
+    {area:"c", icon:"🧊", title:"서늘하고 건조하게 보관", body:"직사광선과 습기를 피하면 유효기간을 지킬 수 있어요."},
+    {area:"e", icon:"🍽️", title:"식전·식후를 확인하세요", body:"지용성 성분은 식후에, 일부 미네랄은 공복에 흡수가 더 잘 돼요. 헷갈릴 땐 제품 라벨을 다시 확인해보세요."},
+    {area:"d", icon:"📈", title:"기록을 꾸준히 남기세요", body:"pill check 탭에서 사진을 찍어 기록을 쌓으면 나만의 복용 패턴이 보이기 시작해요."}
+  ];
+  $("tipGrid").innerHTML = TIPS.map(t=>`<div class="tip-card tip-${t.area}"><div class="tip-icon">${t.icon}</div><h3>${t.title}</h3><p>${t.body}</p></div>`).join("");
+})();
+</script>
+</body>
+</html>
